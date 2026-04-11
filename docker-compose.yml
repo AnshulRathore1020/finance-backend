@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: finance-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: anshul@9009
+      MYSQL_DATABASE: finance_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - finance-network
+
+  backend:
+    build: .
+    container_name: finance-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/finance_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: anshul@9009
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - finance-network
+
+volumes:
+  mysql-data:
+
+networks:
+  finance-network:
